@@ -8,6 +8,82 @@ window.Buffer = window.Buffer || Buffer;
 const MAX_CAPACITY = 40
 const rootstockProviderEthers = new ethers.providers.JsonRpcProvider(rootstockRpc);
 
+
+export const checkEthAddress =async (address: any, setAddress: any, setLoading: any) => {
+    try {
+        if(!/^0x[a-fA-F0-9]{40}$/.test(address)){
+             // the address is not a alid stacks address
+             throw new Error("invalid ETH address")
+        }
+
+        setLoading(true)
+        
+        // Get the Token balance of the address
+        
+        // *******  testing with mainnet with etherscan ************
+
+        //0x237FD45d007Ea5faF5acE1a0dc8324Ab0bf31Dd7  
+        // const apiKey = "7XCPA752MNA72SA7CHRN1JQ1F86B6AAJCQ"
+        // const balanceUrl = `https://api.mantletestnet.com/api?module=account&action=tokennfttx&address=${address}&startblock=0&endblock=999999999&sort=asc&apikey=${apiKey}`
+    
+
+        // *******  testing with mantle network ************
+        
+        const balanceUrl = `https://explorer.testnet.mantle.xyz/api?module=token&action=getToken&contractaddress=${address}`
+        const balanceResponse = await fetch(balanceUrl);
+        const balanceData = await balanceResponse.json();
+
+        console.log("balanceData",balanceData)
+        const txList = balanceData.result;
+
+        console.log("data:",txList)
+        // Get the details of each NFT
+
+        if(txList.length  === 0) {
+            // If there are no NFT assets at the address, return an error message.
+            return {error :"No NFT assets found at this address."}
+        }else {
+            const nftList = [];
+
+            // Return the asset information as an Object.
+            for(let i=0; i<txList.length;i++){
+                
+                const tokenID  = txList[i].tokenID;
+                const contractAddress = txList[i].contractAddress;
+
+                const nftUrl = `https://api.opensea.io/api/v1/assets?token_ids=${tokenID}&asset_contract_address=${contractAddress}`;
+                const nftResponse = await fetch(nftUrl);
+                const nftData = await nftResponse.json();
+    
+                const nftImageURL = nftData.assets[0].image_url
+                const nftName = nftData.assets[0].name
+                const nftDescription   = nftData.assets[0].description
+    
+                nftList.push({
+                    tokenID:tokenID,
+                    contractAddress:contractAddress,
+                    name:nftName,
+                    description:nftDescription,
+                    image:nftImageURL
+                })
+            }
+
+            return {
+                ...nftList
+            }
+
+        }
+    }catch(err) {
+        return { error : "Error when chedcking ETH address."}
+    }finally {
+        setLoading(false)
+        setAddress(address)
+
+
+    }
+}
+
+
 export const checkStacksWallet = async (address: any, setAddress: any, setLoading: any) => {
     let result;
     try {
@@ -32,6 +108,28 @@ export const checkStacksWallet = async (address: any, setAddress: any, setLoadin
         }
     }
     setAddress(address)
+    return result
+}
+
+export const checkENSName = async (ensName:any, setAddress:any,setDomain: any, setLoading: any)=>{
+    let result;
+    try {
+        const provider = new ethers.provider.InfuraProvider("mainnet");
+        const address  = await provider.resolveName(ensName)
+        if(address){
+            setAddress(address);
+            setDomain(ensName);
+        }else {
+            result = {
+                "error" : "Error when checking ENS name."
+            }
+        }
+    }catch(err){
+        result = {
+            "error":"Error when checking ENS name."
+        }
+    }
+    setLoading(false)
     return result
 }
 
