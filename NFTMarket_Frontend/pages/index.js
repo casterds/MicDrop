@@ -180,7 +180,7 @@ export default function Home() {
         <div>
           <div className={style.flexContainer}>
             {assets.map(asset => (
-              <div className={style.cover}>
+              <div  key={asset.id} className={style.cover}>
                 <div className={style.flexList}>
                   <img src={asset.image_thumbnail_url} alt={asset.name} width={180} height={150} className={style.flexImages} />
                 </div>
