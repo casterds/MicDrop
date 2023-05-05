@@ -4,6 +4,7 @@ import axios from 'axios'
 import dynamic from 'next/dynamic';
 import { useWeb3React } from "@web3-react/core";
 import { Modal } from "react-bootstrap";
+import style from "../styles/index.module.css";
 
 import {
   fetchNFTs,
@@ -78,6 +79,19 @@ export default function Home() {
       showMintModal(false, "", "", false, true, "Close");
     }
   }
+  // fetch data from opensea api start
+  const [assets, setAssets] = useState([])
+
+  useEffect(() => {
+    async function fetchData() {
+      const response = await fetch('https://api.opensea.io/api/v1/assets?limit=10')
+      const data = await response.json()
+      setAssets(data.assets)
+    }
+    fetchData()
+  }, [])
+  // fetch data from opensea api end
+
   if (loadingState === 'loaded' && !nfts.length) return (<h1 className="px-20 py-10 text-3xl">No items in marketplace</h1>)
   return (
     <>
@@ -140,6 +154,55 @@ export default function Home() {
           </div>
         </div>
       </div>
+      <main className={style.mainContainer}>
+        <div className={style.flex}>
+          <div>
+            <h1>Trending</h1>
+          </div>
+          <div>
+            <button className={style.btn}>View all</button>
+          </div>
+        </div>
+        <div>
+            <ul className={style.gridContainer}>
+              {assets.map(asset => (
+                <li key={asset.id} className={style.list}>
+                  <img src={asset.image_thumbnail_url} alt={asset.name} width={70} height={70} className={style.gridImg} />
+                  <p className={style.text}>{asset.name}</p>
+                  <p className={style.supply}>{asset.asset_contract.total_supply}</p>
+                  <p className={style.sales}>{asset.num_sales}</p>
+                </li>
+              ))}
+            </ul>
+
+        </div>
+
+        <div>
+          <div className={style.flexContainer}>
+            {assets.map(asset => (
+              <div className={style.cover}>
+                <div className={style.flexList}>
+                  <img src={asset.image_thumbnail_url} alt={asset.name} width={180} height={150} className={style.flexImages} />
+                </div>
+                <div className={style.textCover}>
+                  <div>
+                    <p className={style.name}>{asset.name}</p>
+                  </div>
+                  <div>
+                    <p>Total Supply</p>
+                    <p>Sales</p>
+                  </div>
+                  <div>
+                    <p>{asset.asset_contract.total_supply}</p>
+                    <p>{asset.num_sales}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </main>
     </>
   )
 }
+

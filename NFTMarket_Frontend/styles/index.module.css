@@ -1,0 +1,89 @@
+.mainContainer {
+  padding: 0px 64px;
+}
+
+.flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.btn {
+  letter-spacing: 0.01em;
+  padding: 11px 24px;
+  background-color: rgb(255, 255, 255);
+  border: 1px solid rgb(227, 227, 227);
+  color: rgb(4, 17, 29);
+  border-radius: 12px;
+  font-weight: 600;
+}
+
+.gridContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 0;
+}
+
+.list {
+  list-style-type: decimal;
+  display: flex;
+  align-items: center;
+  padding: 12px 8px;
+  width: calc(100% - 8px);
+}
+
+.list:hover {
+  box-shadow: none;
+  background-color: rgba(229, 232, 235, 0.2);
+}
+
+.gridImg {
+  border-radius: 10px;
+}
+
+.text {
+  font-weight: 600;
+  font-size: calc(0.6rem + 0.5vw);
+  margin-left: 24px;
+}
+
+.supply {
+  font-weight: 600;
+  font-size: calc(0.6rem + 0.5vw);
+  margin-left: 24px;
+}
+
+.sales {
+  font-weight: 600;
+  font-size: calc(0.6rem + 0.5vw);
+  margin-left: 40px;
+}
+
+
+.flexContainer {
+  display: flex;
+  padding: 0;
+}
+
+.cover {
+  width: 80%;
+  height: 22rem;
+  border-radius: 5px;
+}
+
+.flexList {
+  margin-right: 24px;
+}
+
+.cover:hover {
+  transform: translate(0px, -4px);
+}
+
+.textCover {
+  background-color: #fff;
+}
+
+.name {
+  display: flex;
+  flex-wrap: wrap;
+}
