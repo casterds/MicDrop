@@ -35,10 +35,16 @@ import baselineBrightness4 from '@iconify/icons-ic/baseline-brightness-4';
 // Context
 import { useContext } from 'react';
 import { AppContext } from 'src/AppContext';
+import dynamic from 'next/dynamic';
 
 // Components
 import Logo from './Logo';
-import Wallet from './Wallet';
+
+const Wallet = dynamic(
+    () => import('./Wallet'),
+    { ssr: false }
+  );
+
 
 const HeaderWrapper = styled(AppBar)(({ theme }) => `
     width: 100%;
