@@ -3,6 +3,7 @@ import { useWeb3React } from "@web3-react/core";
 import React, { useEffect, useState, useRef } from "react";
 import { Modal } from "react-bootstrap";
 import { useWallet } from "src/lib/hooks/wallet";
+import { useSocialAuth } from './useSocialAuth'
 
 // Material
 import {
@@ -26,6 +27,8 @@ import { Icon } from '@iconify/react';
 import userLock from '@iconify/icons-fa-solid/user-lock';
 
 export default function Wallet() {
+    const { smartAccount, loading, login, logout } = useSocialAuth()
+
     const { account, active, library, chainId } = useWeb3React();
 
     const anchorRef = useRef(null);
@@ -134,79 +137,84 @@ export default function Wallet() {
                     }
                 }}
             >
-                {account ? (
-                        <>
-                            <Link
-                                underline="none"
-                                color="inherit"
-                                // target="_blank"
-                                href={`/`}
-                                rel="noreferrer noopener nofollow"
-                            >
-                                <MenuItem
-                                    key="account_profile"
-                                    sx={{ typography: 'body2', py: 2, px: 2.5 }}
-                                    onClick={()=>setOpen(false)}
-                                >
-                                    <Stack direction='row' spacing={1} sx={{mr: 2}} alignItems='center'>
-                                        <Badge color="primary">
-                                            <ShoppingCartIcon />
-                                        </Badge>
-                                        <Typography variant='s3' style={{marginLeft: '10px'}}>Buy Crypto</Typography>
-                                    </Stack>
-                                </MenuItem>
-                            </Link>
-                            <Link
-                                underline="none"
-                                color="inherit"
-                                href={`/create-item`}
-                                rel="noreferrer noopener nofollow"
-                            >
-                                <MenuItem
-                                    key="create"
-                                    sx={{ typography: 'body2', py: 2, px: 2.5 }}
-                                    onClick={()=>setOpen(false)}
-                                >
-                                    <Stack direction='row' spacing={1} sx={{mr: 2}} alignItems='center'>
-                                        <AddPhotoAlternateIcon />
-                                        <Typography variant='s3' style={{marginLeft: '10px'}}>Create NFT</Typography>
-                                    </Stack>
-                                </MenuItem>
-                            </Link>
-                            <Divider />
-                            <Stack spacing={1} alignItems='center' sx={{pt: 1, pb: 2}}>
-                                <Link
-                                    color="inherit"
-                                    target="_blank"
-                                    href={`https://explorer.testnet.mantle.xyz/address/${account}`}
-                                    rel="noreferrer noopener nofollow"
-                                >
-                                    <Typography align="center" style={{ wordWrap: "break-word" }} variant="body2" sx={{ width: 180, color: 'text.secondary' }} >
-                                        {account}
-                                    </Typography>
-                                </Link>
-                                <Stack direction="row" spacing={1}>
-                                    <Button variant="contained" onClick={handleLogout} size="small">
-                                        Logout
-                                    </Button>
-                                    <CopyToClipboard text={account} onCopy={()=>{}}>
-                                        <Button variant="outlined" size="small">
-                                            Copy
-                                        </Button>
-                                    </CopyToClipboard>
-                                </Stack>
-                            </Stack>
-                        </>
-                    ) : (
-                        <MenuItem
-                            key="wallet"
-                            onClick={() =>{handleShow(); handleClose()}}
-                            sx={{ typography: 'body2', py: 2, px: 2.5 }}
+                {!!smartAccount && (
+                    <>
+                        <Link
+                            underline="none"
+                            color="inherit"
+                            // target="_blank"
+                            href={`/`}
+                            rel="noreferrer noopener nofollow"
                         >
-                            <Stack direction='row' spacing={1} sx={{mr: 2}} alignItems='center'>
-                                <Typography variant='s3' style={{marginLeft: '10px'}}>Wallet Connect</Typography>
+                            <MenuItem
+                                key="account_profile"
+                                sx={{ typography: 'body2', py: 2, px: 2.5 }}
+                            >
+                                <Stack direction='row' spacing={1} sx={{mr: 2}} alignItems='center'>
+                                    <Badge color="primary">
+                                        <ShoppingCartIcon />
+                                    </Badge>
+                                    <Typography variant='s3' style={{marginLeft: '10px'}}>Buy Crypto</Typography>
+                                </Stack>
+                            </MenuItem>
+                        </Link>
+                        <Link
+                            underline="none"
+                            color="inherit"
+                            href={`/create-item`}
+                            rel="noreferrer noopener nofollow"
+                        >
+                            <MenuItem
+                                key="create"
+                                sx={{ typography: 'body2', py: 2, px: 2.5 }}
+                            >
+                                <Stack direction='row' spacing={1} sx={{mr: 2}} alignItems='center'>
+                                    <AddPhotoAlternateIcon />
+                                    <Typography variant='s3' style={{marginLeft: '10px'}}>Create NFT</Typography>
+                                </Stack>
+                            </MenuItem>
+                        </Link>
+                        <Divider />
+                        <Stack spacing={1} alignItems='center' sx={{pt: 1, pb: 2}}>
+                            <Link
+                                color="inherit"
+                                target="_blank"
+                                href={`https://explorer.testnet.mantle.xyz/address/${account}`}
+                                rel="noreferrer noopener nofollow"
+                            >
+                                <Typography align="center" style={{ wordWrap: "break-word" }} variant="body2" sx={{ width: 180, color: 'text.secondary' }} >
+                                    {smartAccount.address}
+                                </Typography>
+                            </Link>
+                            <Stack direction="row" spacing={1}>
+                                <Button variant="contained" onClick={logout} size="small">
+                                    Logout
+                                </Button>
+                                <CopyToClipboard text={account} onCopy={()=>{}}>
+                                    <Button variant="outlined" size="small">
+                                        Copy
+                                    </Button>
+                                </CopyToClipboard>
                             </Stack>
-                        </MenuItem>
+                        </Stack>
+                    </>
+                )}
+                {
+                    loading && 
+                    <Stack spacing={1} alignItems='center' sx={{pt: 1, pb: 2}}>
+                        <Typography align="center" style={{ wordWrap: "break-word" }} variant="body2" sx={{ width: 180, color: 'text.secondary' }} >Loading..</Typography>
+                    </Stack>
+                }
+                {!smartAccount && !loading && (
+                    <MenuItem
+                        key="wallet"
+                        onClick={() =>{handleClose(); login();}}
+                        sx={{ typography: 'body2', py: 2, px: 2.5 }}
+                    >
+                        <Stack direction='row' spacing={1} sx={{mr: 2}} alignItems='center'>
+                            <Typography variant='s3' style={{marginLeft: '10px'}}>Login</Typography>
+                        </Stack>
+                    </MenuItem>
                 )}
             </Popover>
             <Modal show={show} onHide={handleClose1}>
