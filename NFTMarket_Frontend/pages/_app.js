@@ -9,6 +9,7 @@ import { Web3Provider } from "@ethersproject/providers";
 import "styles/globals.css";
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import "@biconomy/web3-auth/dist/src/style.css"
 
 function getLibrary(provider) {
   const library = new Web3Provider(provider);
