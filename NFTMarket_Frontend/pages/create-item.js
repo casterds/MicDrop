@@ -177,12 +177,11 @@ export default function Minting() {
   async function mintNFT(uri) {
     
     try {
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      window.ethereum.enable();
+      const provider = new ethers.providers.JsonRpcProvider("https://rpc.testnet.mantle.xyz");
       const signer = provider.getSigner();
       console.log(signer);
         console.log(library?.getSigner())
-      let tx = await createToken(uri, library?.getSigner());
+      let tx = await createToken(uri, signer);
       
       showMintModal(
         true,
@@ -378,5 +377,5 @@ display: flex;
   &:hover {
     opacity: 0.6;
   }
-  }
+  
 `

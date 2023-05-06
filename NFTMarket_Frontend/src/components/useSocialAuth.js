@@ -9,7 +9,7 @@ export const useSocialAuth = () => {
   const [flag, setFlag] = useState(false)
   const sdkRef = useRef(null)
   const [loading, setLoading] = useState(false)
-  const websiteUrl = "https://vercel.app";
+  const websiteUrl = "https://jia-test.vercel.app" || "http://localhost:3000/";
 
   useEffect(() => {
     let configureLogin
@@ -28,7 +28,7 @@ export const useSocialAuth = () => {
       const socialLogin = new SocialLogin();
       const signature1 = await socialLogin.whitelistUrl(websiteUrl);
       await socialLogin.init({
-        chainId: ethers.utils.hexValue(ChainId.MAINNET),
+        chainId: ethers.utils.hexValue(5001),
         whitelistUrls: {
           websiteUrl: signature1,
         }
@@ -47,11 +47,11 @@ export const useSocialAuth = () => {
     if (!sdkRef?.current?.provider) return
     sdkRef.current.hideWallet();
     setLoading(true);
-    const web3Provider = new ethers.providers.Web3Provider(sdkRef.current.provider);
+    const web3Provider = new ethers.providers.JsonRpcProvider("https://rpc.testnet.mantle.xyz");
     try {
       const smartAccount = new SmartAccount(web3Provider, {
-        activeNetworkId: ChainId.MAINNET,
-        supportedNetworksIds: [ChainId.MAINNET],
+        activeNetworkId: 5001,
+        supportedNetworksIds: [5001],
       });
       await smartAccount.init();
       setSmartAccount(smartAccount);
