@@ -94,6 +94,7 @@
         "format": "prettier --write \"./**/*.{js,jsx,json}\" --config ./.prettierrc"
     },
     "devDependencies": {
+        "@mantleio/sdk": "^0.1.4",
         "@next/bundle-analyzer": "13.1.5",
         "@nomiclabs/hardhat-ethers": "^2.2.2",
         "eslint": "8.17.0",
