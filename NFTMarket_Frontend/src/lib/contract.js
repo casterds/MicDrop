@@ -1,6 +1,6 @@
 import { Contract } from "@ethersproject/contracts";
-const nft_abi = require("artifacts/contracts/NFT.sol/NFT.json")
-const market_abi = require("artifacts/contracts/market.sol/NFTMarket.json")
+const nft_abi = require("../../artifacts/contracts/NFT.sol/NFT.JSON")
+const market_abi = require("../../artifacts/contracts/market.sol/NFTMarket.json")
 import {
     nftaddress, nftmarketaddress
   } from 'config'
@@ -24,12 +24,12 @@ export function truncateHashString(txhash) {
 
 export function getnftContractObj(provider) {
 
-  return new Contract(nftaddress, nft_abi,  provider);
+  return new Contract(nftaddress, nft_abi.abi,  provider);
 }
 
 export function getmarketContractObj(_provider) {
   
-  return new Contract(nftmarketaddress, market_abi, _provider);
+  return new Contract(nftmarketaddress, market_abi.abi, _provider);
 }
 
 export const shorter = (str) =>
