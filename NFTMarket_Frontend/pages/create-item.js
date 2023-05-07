@@ -96,7 +96,7 @@ export default function Minting() {
               formData.append("name", nftName)
               formData.append("description", description)
               console.log('uploading image to ipfs')
-              const response = await axios.post(
+              const { data: response } = await axios.post(
                   create_url,
                   formData
               )
