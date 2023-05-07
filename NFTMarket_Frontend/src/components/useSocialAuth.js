@@ -1,15 +1,18 @@
 import { ethers } from 'ethers'
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef, createContext, useContext } from 'react'
 import { ChainId } from '@biconomy/core-types'
 import SocialLogin from '@biconomy/web3-auth'
 import SmartAccount from '@biconomy/smart-account'
 
-export const useSocialAuth = () => {
+export const AuthContext = createContext(null)
+export const useAuthCtx = () => useContext(AuthContext)
+
+export const AuthContextProvider = ({children}) => {
   const [smartAccount, setSmartAccount] = useState(null)
   const [flag, setFlag] = useState(false)
   const sdkRef = useRef(null)
   const [loading, setLoading] = useState(false)
-  const websiteUrl = "https://jia-test.vercel.app" || "http://localhost:3000/";
+  const websiteUrl = "https://jia-test.vercel.app" || "http://localhost:3000/" || "https://nftmarket-27787f.spheron.app";
 
   useEffect(() => {
     let configureLogin
@@ -24,6 +27,7 @@ export const useSocialAuth = () => {
   }, [flag]);
 
   async function login() {
+    console.log('before current')
     if (!sdkRef?.current) {
       const socialLogin = new SocialLogin();
       const signature1 = await socialLogin.whitelistUrl(websiteUrl);
@@ -44,10 +48,12 @@ export const useSocialAuth = () => {
   }
 
   async function setupSmartAccount() {
-    if (!sdkRef?.current?.provider) return
+    if (!sdkRef?.current?.web3auth?.provider) return
     sdkRef.current.hideWallet();
     setLoading(true);
-    const web3Provider = new ethers.providers.JsonRpcProvider("https://rpc.testnet.mantle.xyz");
+    const web3Provider = new ethers.providers.Web3Provider(sdkRef?.current?.web3auth?.provider);
+    const accounts = await web3Provider.listAccounts();
+    console.log({accounts})
     try {
       const smartAccount = new SmartAccount(web3Provider, {
         activeNetworkId: 5001,
@@ -72,10 +78,15 @@ export const useSocialAuth = () => {
     setFlag(false);
   }
 
-  return {
+  const providerValue = {
     smartAccount,
     loading,
     login,
     logout
   }
+  return (
+    <AuthContext.Provider value={providerValue}>
+      {children}
+    </AuthContext.Provider>
+  )
 }

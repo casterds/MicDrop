@@ -24,6 +24,7 @@ import { useSnackbar } from 'src/components/useSnackbar';
 import { Modal } from "react-bootstrap";
 
 import { useWeb3React } from "@web3-react/core";
+import { useAuthCtx } from 'src/components/useSocialAuth'
 
 import {
   createToken,
@@ -45,6 +46,7 @@ export default function Minting() {
   const [tokenuri, setTokenuri] = useState(null)
   const create_url = "https://1300-2604-a00-50-1a-9cb2-425a-e817-dde3.ngrok-free.app/api/upload"
   const { account, active, library, chainId } = useWeb3React();
+  const { smartAccount } = useAuthCtx()
 
   const [show, setShow] = useState({
     show: false,
@@ -175,7 +177,7 @@ export default function Minting() {
 
   async function mintNFT(uri){
     try{
-      let tx = await createToken(uri, library?.getSigner());
+      let tx = await createToken(uri, smartAccount.getsigner());
       showMintModal(
         true,
         "Mint submitted",

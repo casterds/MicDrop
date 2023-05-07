@@ -3,7 +3,7 @@ import { useWeb3React } from "@web3-react/core";
 import React, { useEffect, useState, useRef } from "react";
 import { Modal } from "react-bootstrap";
 import { useWallet } from "src/lib/hooks/wallet";
-import { useSocialAuth } from './useSocialAuth'
+import { useAuthCtx } from './useSocialAuth'
 
 // Material
 import {
@@ -27,10 +27,10 @@ import { Icon } from '@iconify/react';
 import userLock from '@iconify/icons-fa-solid/user-lock';
 
 export default function Wallet() {
-    const { smartAccount, loading, login, logout } = useSocialAuth()
+    const { smartAccount, loading, login, logout } = useAuthCtx()
 
     const { account, active, library, chainId } = useWeb3React();
-
+    
     const anchorRef = useRef(null);
 
     const [open, setOpen] = useState(false);

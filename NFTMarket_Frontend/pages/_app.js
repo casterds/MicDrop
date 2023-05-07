@@ -10,6 +10,7 @@ import "styles/globals.css";
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "@biconomy/web3-auth/dist/src/style.css"
+import {AuthContextProvider} from "src/components/useSocialAuth"
 
 function getLibrary(provider) {
   const library = new Web3Provider(provider);
@@ -39,18 +40,20 @@ function NFTmarket(props) {
                 <meta name="msapplication-TileColor" content="#121619" />
                 <meta name="theme-color" content="#ffffff"/>
             </Head>
-            <Web3ReactProvider getLibrary={getLibrary}>
-                <ContextProvider openSnackbar={openSnackbar}>
-                    <ThemeProvider>
-                        <SnackbarProvider maxSnack={3}>
-                            <CssBaseline />
-                            <Header />
-                            <Component {...pageProps}/>
-                            <XSnackbar isOpen={isOpen} message={msg} variant={variant} close={closeSnackbar} />
-                        </SnackbarProvider>
-                    </ThemeProvider>
-                </ContextProvider>
-            </Web3ReactProvider>
+            <AuthContextProvider>
+              <Web3ReactProvider getLibrary={getLibrary}>
+                  <ContextProvider openSnackbar={openSnackbar}>
+                      <ThemeProvider>
+                          <SnackbarProvider maxSnack={3}>
+                              <CssBaseline />
+                              <Header />
+                              <Component {...pageProps}/>
+                              <XSnackbar isOpen={isOpen} message={msg} variant={variant} close={closeSnackbar} />
+                          </SnackbarProvider>
+                      </ThemeProvider>
+                  </ContextProvider>
+              </Web3ReactProvider>
+            </AuthContextProvider>
         </>
     );
 }
