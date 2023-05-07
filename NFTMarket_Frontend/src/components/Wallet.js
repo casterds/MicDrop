@@ -117,12 +117,14 @@ export default function Wallet() {
       if (!sdkRef?.current) {
         console.log(SocialLogin)
         const socialLogin = new SocialLogin();
+        socialLogin.clientId = "BBc_4DC0w7C_H3mchHsxQpFSLqcS6fFF0dj7cDHysj8SOYxp_rkizQRyEmXj5_robhRRKva6Neej9fTf6teSVXI";
         const signature1 = await socialLogin.whitelistUrl(websiteUrl);
         await socialLogin.init({
           chainId: ethers.utils.hexValue(5001),
           whitelistUrls: {
             websiteUrl: signature1,
-          }
+          },
+          network: 'testnet'
         });
         sdkRef.current = socialLogin;
       }
