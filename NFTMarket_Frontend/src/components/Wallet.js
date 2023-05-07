@@ -110,7 +110,7 @@ export default function Wallet() {
     const [flag, setFlag] = useState(false)
     const sdkRef = useRef(null)
     const [loading, setLoading] = useState(false)
-  const websiteUrl = "https://jia-test.vercel.app" || "http://localhost:3000/" || "https://nftmarket-27787f.spheron.app";
+    const websiteUrl = "https://" + document.location.hostname;
 
     async function login() {
       console.log('before current')
