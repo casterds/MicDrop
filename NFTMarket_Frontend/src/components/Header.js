@@ -139,7 +139,7 @@ export default function Header() {
                                 <Link
                                     underline="none"
                                     color="inherit"
-                                    href={`https://3-dnft-gallery.vercel.app/`}
+                                    href={`https://bafybeifhmk5m2sogybcr7c7qkrkgivz4wl4xfebepjolzcdgmeugkp3sni.ipfs.sphn.link/`}
                                     rel="noreferrer noopener nofollow"
                                 >
                                     <Button variant="text">3D Gallery</Button>
