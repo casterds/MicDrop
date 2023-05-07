@@ -139,7 +139,7 @@ export default function Wallet() {
     }
 
     async function setupSmartAccount() {
-      if (!sdkRef?.current?.web3auth?.provider) return
+      if (!sdkRef?.current?.web3auth?.provider) return;
       sdkRef.current.hideWallet();
       setLoading(true);
       const web3Provider = new ethers.providers.Web3Provider(sdkRef?.current?.web3auth?.provider);
