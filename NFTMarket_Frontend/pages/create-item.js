@@ -43,7 +43,7 @@ export default function Minting() {
   const [loading, setLoading] = useState(false)
   const [tokenid, setTokenid] = useState(null)
   const [tokenuri, setTokenuri] = useState(null)
-  const create_url = "http://135.181.234.78/api/upload"
+  const create_url = "https://1300-2604-a00-50-1a-9cb2-425a-e817-dde3.ngrok-free.app/api/upload"
   const { account, active, library, chainId } = useWeb3React();
 
   const [show, setShow] = useState({
