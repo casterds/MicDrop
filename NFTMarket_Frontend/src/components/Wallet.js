@@ -76,6 +76,8 @@ export default function Wallet() {
     async function connect(m) {
         await connectWallet(m);
         setShow(false);
+        //close the modal after
+        setOpen(false);
     }
     async function disconnect() {
         await disconnectWallet();
@@ -152,6 +154,8 @@ export default function Wallet() {
         console.log(setSmartAccount)
         setSmartAccount(smartAccount);
         setLoading(false);
+        // set open to false after initializing the smart account
+        setOpen(false);
       } catch (err) {
         console.log(err);
       }
