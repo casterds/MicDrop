@@ -28,6 +28,7 @@ app.post('/', upload.single('file'), async(req, res) => {
         const description = req.body.description
 
         var startTime = performance.now()
+        let currentlyUploaded = 0;
         const { uploadId, bucketId, protocolLink, dynamicLinks } = await client.upload
         (
             req.file.path,
