@@ -4,6 +4,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { Modal } from "react-bootstrap";
 import { useWallet } from "src/lib/hooks/wallet";
 import { useAuthCtx } from './useSocialAuth'
+import { ethers } from 'ethers'
 
 // Material
 import {
@@ -26,8 +27,11 @@ import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import { Icon } from '@iconify/react';
 import userLock from '@iconify/icons-fa-solid/user-lock';
 
+import SocialLogin from '@biconomy/web3-auth'
+import SmartAccount from '@biconomy/smart-account'
+
 export default function Wallet() {
-    const { smartAccount, loading, login, logout } = useAuthCtx()
+    const { setSmartAccount, smartAccount } = useAuthCtx()
 
     const { account, active, library, chainId } = useWeb3React();
     
@@ -101,6 +105,65 @@ export default function Wallet() {
             </button>
             );
         }
+    }
+
+    const [flag, setFlag] = useState(false)
+    const sdkRef = useRef(null)
+    const [loading, setLoading] = useState(false)
+  const websiteUrl = "https://jia-test.vercel.app" || "http://localhost:3000/" || "https://nftmarket-27787f.spheron.app";
+
+    async function login() {
+      console.log('before current')
+      if (!sdkRef?.current) {
+        console.log(SocialLogin)
+        const socialLogin = new SocialLogin();
+        const signature1 = await socialLogin.whitelistUrl(websiteUrl);
+        await socialLogin.init({
+          chainId: ethers.utils.hexValue(5001),
+          whitelistUrls: {
+            websiteUrl: signature1,
+          }
+        });
+        sdkRef.current = socialLogin;
+      }
+      if (!sdkRef?.current?.provider) {
+        sdkRef.current.showWallet();
+        setFlag(true);
+      } else {
+        setupSmartAccount();
+      }
+    }
+
+    async function setupSmartAccount() {
+      if (!sdkRef?.current?.web3auth?.provider) return
+      sdkRef.current.hideWallet();
+      setLoading(true);
+      const web3Provider = new ethers.providers.Web3Provider(sdkRef?.current?.web3auth?.provider);
+      const accounts = await web3Provider.listAccounts();
+      console.log({accounts})
+      try {
+        const smartAccount = new SmartAccount(web3Provider, {
+          activeNetworkId: 5001,
+          supportedNetworksIds: [5001],
+        });
+        await smartAccount.init();
+        console.log(setSmartAccount)
+        setSmartAccount(smartAccount);
+        setLoading(false);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+
+    const logout = async () => {
+      if (!sdkRef.current) {
+        console.error('Not authorized.')
+        return
+      }
+      await sdkRef.current.logout();
+      sdkRef.current.hideWallet();
+      setSmartAccount(null);
+      setFlag(false);
     }
 
     return (

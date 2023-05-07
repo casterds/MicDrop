@@ -24,15 +24,12 @@ import { useSnackbar } from 'src/components/useSnackbar';
 import { Modal } from "react-bootstrap";
 
 import { useWeb3React } from "@web3-react/core";
-import { useAuthCtx } from 'src/components/useSocialAuth'
-
+import MintButton from "src/components/MintButton"
 import {
-  createToken,
   listToken
 } from "src/lib/contractMethods"
 
 export default function Minting() {
-
   const router = useRouter()
   const [nftName, setNftName] = useState('')
   const [price, setPrice] = useState('')
@@ -46,7 +43,6 @@ export default function Minting() {
   const [tokenuri, setTokenuri] = useState(null)
   const create_url = "https://1300-2604-a00-50-1a-9cb2-425a-e817-dde3.ngrok-free.app/api/upload"
   const { account, active, library, chainId } = useWeb3React();
-  const { smartAccount } = useAuthCtx()
 
   const [show, setShow] = useState({
     show: false,
@@ -175,34 +171,6 @@ export default function Minting() {
     )
   }
 
-  async function mintNFT(uri){
-    try{
-      let tx = await createToken(uri, smartAccount.getsigner());
-      showMintModal(
-        true,
-        "Mint submitted",
-        `https://explorer.testnet.mantle.xyz/tx/${tx.hash}`,
-        true,
-        false,
-        ""
-      );
-      tx = await tx.wait(1);
-      showMintModal(
-        true,
-        "Mint Success",
-        `https://explorer.testnet.mantle.xyz/tx/${tx.hash}`,
-        false,
-        true,
-        "Done"
-      );
-      let event = tx.events[0]
-      let value = event.args[2]
-      let tokenId = value.toNumber()
-      setTokenid(tokenId);
-    } catch(e){
-      console.log(e)
-    }
-  }
 
   async function listNFT(tokenid){
     try{
@@ -297,13 +265,7 @@ export default function Minting() {
           <NFTUploader />
         </Stack>
         <Stack spacing={2} marginBottom={3} direction="row">
-          <Button
-            sx={{ padding: 1, width:'35%' }}
-            onClick={() => mintNFT(tokenuri)}
-            variant='contained'
-          >
-            Mint NFT
-          </Button>
+          <MintButton tokenuri={tokenuri}/>
           <Button
             sx={{ padding: 1, width:'35%' }}
             onClick={() => listNFT(tokenid)}
