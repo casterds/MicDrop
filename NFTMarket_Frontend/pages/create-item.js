@@ -24,7 +24,6 @@ import { useSnackbar } from 'src/components/useSnackbar';
 import { Modal } from "react-bootstrap";
 
 import { useWeb3React } from "@web3-react/core";
-import { ethers } from "ethers";
 
 import {
   createToken,
@@ -135,7 +134,7 @@ export default function Minting() {
               type='file'
               onChange={handleFileSelect}
           />
-        <Card
+          <Card
               sx={{
                   display: 'flex',
                   width: 320,
@@ -174,15 +173,9 @@ export default function Minting() {
     )
   }
 
-  async function mintNFT(uri) {
-    
-    try {
-      const provider = new ethers.providers.JsonRpcProvider("https://rpc.testnet.mantle.xyz");
-      const signer = provider.getSigner();
-      console.log(signer);
-        console.log(library?.getSigner())
-      let tx = await createToken(uri, signer);
-      
+  async function mintNFT(uri){
+    try{
+      let tx = await createToken(uri, library?.getSigner());
       showMintModal(
         true,
         "Mint submitted",
@@ -240,11 +233,11 @@ export default function Minting() {
       <Container maxWidth='md' sx={{ marginBottom: '3vh' }}>
         
         <Stack spacing={2} marginBottom={3}>
-          <Typography className='flex item-center justify-center p-2 m-2 text-center ' variant="h4" >
+          <Typography variant="h4" >
             Create New NFT
           </Typography>
-          <Typography className='text-black' variant='caption'>Name</Typography>
-          <TextField className=' border-gray-700 hover:bg-gray-300 text-gray-700 overflow-hidden placeholder-gray-700' required placeholder='Asset Name' margin='dense'
+          <Typography variant='caption'>Name</Typography>
+          <TextField required placeholder='Asset Name' margin='dense'
             onChange={(e) => {
               setNftName(e.target.value)
             }}
@@ -256,9 +249,8 @@ export default function Minting() {
             }} />
         </Stack>
         <Stack spacing={2} marginBottom={3}>
-          <Typography className='text-black' variant='caption' >Description</Typography>
+          <Typography variant='caption' >Description</Typography>
           <TextField
-            className=' border-gray-700 hover:bg-gray-300 text-gray-700 overflow-hidden placeholder-gray-700'
             placeholder='Provide a detailed description of your NFT'
             margin='dense'
             multiline
@@ -280,16 +272,19 @@ export default function Minting() {
         </Stack>
 
         <Stack spacing={2} marginBottom={3}>
-          <Typography className='text-black' variant='caption'>Price</Typography>
+          <Typography variant='caption'>Price</Typography>
           <TextField
-            className=' border-gray-700 hover:bg-gray-300 text-gray-700 overflow-hidden placeholder-gray-700'
             required placeholder='NFT Price'
             margin='dense'
             onChange={(e) => {
               setPrice(e.target.value)
             }}
             value={price}
-            />
+            sx={{
+              '&.MuiTextField-root': {
+                marginTop: 1
+              }
+            }} />
         </Stack>
         
         <Stack spacing={2} marginBottom={3}>
@@ -377,5 +372,5 @@ display: flex;
   &:hover {
     opacity: 0.6;
   }
-  
+  }
 `
