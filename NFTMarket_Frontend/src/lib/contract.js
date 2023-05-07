@@ -1,6 +1,7 @@
 import { Contract } from "@ethersproject/contracts";
-const nft_abi = require("../../artifacts/contracts/NFT.sol/NFT.JSON")
+const nft_abi = require("../../artifacts/contracts/NFT.sol/NFT.json")
 const market_abi = require("../../artifacts/contracts/market.sol/NFTMarket.json")
+
 import {
     nftaddress, nftmarketaddress
   } from 'config'
